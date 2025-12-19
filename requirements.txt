@@ -1,0 +1,6 @@
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+parakeet-mlx>=0.1.0
+librosa>=0.10.0
+soundfile>=0.12.0
+huggingface-hub>=0.20.0
