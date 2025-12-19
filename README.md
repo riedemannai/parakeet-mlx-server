@@ -274,7 +274,7 @@ MIT License - see [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- [NVIDIA Parakeet TDT 0.6B V2](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v2) - Base transcription model by NVIDIA
+- [NVIDIA Parakeet TDT 0.6B V3](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3) - Base transcription model by NVIDIA
 - [FastAPI](https://fastapi.tiangolo.com/) - Modern web framework
 - [MLX](https://github.com/ml-explore/mlx) - Machine learning framework for Apple Silicon
 
