@@ -80,7 +80,6 @@ python parakeet_server.py --port 8002 --model mlx-community/parakeet-tdt-0.6b-v3
 ### Available Models
 
 - `mlx-community/parakeet-tdt-0.6b-v3` (default)
-- `mlx-community/parakeet-neuro-german-mlx` (German)
 - More models from [MLX Community](https://huggingface.co/mlx-community)
 
 ## API
