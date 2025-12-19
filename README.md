@@ -2,94 +2,94 @@
 
 <div align="center">
 
-**OpenAI-kompatibler FastAPI Server für Audio-Transkription mit Parakeet-MLX**
+**OpenAI-Compatible FastAPI Server for Audio Transcription with Parakeet-MLX**
 
-[Features](#features) • [Installation](#installation) • [Verwendung](#verwendung) • [API](#api)
+[Features](#features) • [Installation](#installation) • [Usage](#usage) • [API](#api)
 
 </div>
 
 ---
 
-## Über Parakeet MLX Server
+## About Parakeet MLX Server
 
-Parakeet MLX Server ist ein OpenAI-kompatibler FastAPI-Server für Audio-Transkription, der [Parakeet-MLX](https://github.com/mlx-community/parakeet) Modelle verwendet. Der Server ist speziell für Apple Silicon (MLX) optimiert und bietet eine vollständig kompatible API zu OpenAI's Whisper API.
+Parakeet MLX Server is an OpenAI-compatible FastAPI server for audio transcription using [Parakeet-MLX](https://github.com/mlx-community/parakeet) models. The server is specifically optimized for Apple Silicon (MLX) and provides a fully compatible API to OpenAI's Whisper API.
 
 ## Features
 
-- 🚀 **OpenAI-kompatible API** - Direkter Drop-in-Ersatz für OpenAI Whisper API
-- 🍎 **Apple Silicon optimiert** - Nutzt MLX für optimale Performance auf Mac
-- 📝 **Automatische Transkription** - Unterstützt verschiedene Audio-Formate
-- 🌍 **Mehrsprachig** - Unterstützt verschiedene Sprachen (inkl. Deutsch)
-- ⚡ **Schnell** - Optimiert für lokale Inferenz
-- 🔧 **Einfach zu verwenden** - Einfache Installation und Konfiguration
+- 🚀 **OpenAI-Compatible API** - Direct drop-in replacement for OpenAI Whisper API
+- 🍎 **Apple Silicon Optimized** - Uses MLX for optimal performance on Mac
+- 📝 **Automatic Transcription** - Supports various audio formats
+- 🌍 **Multilingual** - Supports multiple languages (including German)
+- ⚡ **Fast** - Optimized for local inference
+- 🔧 **Easy to Use** - Simple installation and configuration
 
 ## Installation
 
-### Voraussetzungen
+### Prerequisites
 
-- Python 3.10 oder höher
-- Apple Silicon Mac (M1/M2/M3) oder System mit MLX-Unterstützung
-- pip oder uv
+- Python 3.10 or higher
+- Apple Silicon Mac (M1/M2/M3) or system with MLX support
+- pip or uv
 
-### Schnellstart
+### Quick Start
 
 ```bash
-# 1. Repository klonen
+# 1. Clone repository
 git clone git@github.com:riedemannai/parakeet-mlx-server.git
 cd parakeet-mlx-server
 
-# 2. Abhängigkeiten installieren
+# 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Server starten
+# 3. Start server
 ./start_server.sh
 ```
 
-### Mit UV
+### With UV
 
 ```bash
-# 1. Repository klonen
+# 1. Clone repository
 git clone git@github.com:riedemannai/parakeet-mlx-server.git
 cd parakeet-mlx-server
 
-# 2. Mit UV installieren
+# 2. Install with UV
 uv pip install -r requirements.txt
 
-# 3. Server starten
+# 3. Start server
 python parakeet_server.py
 ```
 
-## Verwendung
+## Usage
 
-### Server starten
+### Start Server
 
 ```bash
-# Standard (Port 8002, Standard-Model)
+# Default (Port 8002, default model)
 ./start_server.sh
 
-# Mit benutzerdefiniertem Port
+# With custom port
 PORT=8080 ./start_server.sh
 
-# Mit benutzerdefiniertem Model
+# With custom model
 PARAKEET_MODEL=mlx-community/parakeet-tdt-0.6b-v3 ./start_server.sh
 
-# Oder direkt mit Python
+# Or directly with Python
 python parakeet_server.py --port 8002 --model mlx-community/parakeet-tdt-0.6b-v3
 ```
 
-### Verfügbare Modelle
+### Available Models
 
-- `mlx-community/parakeet-tdt-0.6b-v3` (Standard)
-- `mlx-community/parakeet-neuro-german-mlx` (Deutsch)
-- Weitere Modelle von [MLX Community](https://huggingface.co/mlx-community)
+- `mlx-community/parakeet-tdt-0.6b-v3` (default)
+- `mlx-community/parakeet-neuro-german-mlx` (German)
+- More models from [MLX Community](https://huggingface.co/mlx-community)
 
 ## API
 
-### OpenAI-kompatible Endpoints
+### OpenAI-Compatible Endpoints
 
 #### POST `/v1/audio/transcriptions`
 
-Transkribiert Audio zu Text.
+Transcribes audio to text.
 
 **Request:**
 ```bash
@@ -104,13 +104,13 @@ curl -X POST "http://localhost:8002/v1/audio/transcriptions" \
 **Response:**
 ```json
 {
-  "text": "Transkribierter Text hier..."
+  "text": "Transcribed text here..."
 }
 ```
 
 #### GET `/v1/models`
 
-Listet verfügbare Modelle.
+Lists available models.
 
 **Request:**
 ```bash
@@ -134,7 +134,7 @@ curl http://localhost:8002/v1/models
 
 #### GET `/health`
 
-Health Check Endpoint.
+Health check endpoint.
 
 **Request:**
 ```bash
@@ -150,7 +150,7 @@ curl http://localhost:8002/health
 }
 ```
 
-### Unterstützte Audio-Formate
+### Supported Audio Formats
 
 - WAV
 - MP3
@@ -160,41 +160,41 @@ curl http://localhost:8002/health
 - AIFF
 - AU
 
-## Konfiguration
+## Configuration
 
-### Umgebungsvariablen
+### Environment Variables
 
-- `PORT` - Port für den Server (Standard: 8002)
-- `PARAKEET_MODEL` - Model-ID oder Pfad (Standard: mlx-community/parakeet-tdt-0.6b-v3)
+- `PORT` - Port for the server (default: 8002)
+- `PARAKEET_MODEL` - Model ID or path (default: mlx-community/parakeet-tdt-0.6b-v3)
 
-### Kommandozeilen-Argumente
+### Command Line Arguments
 
 ```bash
 python parakeet_server.py --help
 
 Options:
-  --port PORT     Port für den Server (Standard: 8002)
-  --model MODEL   Model-ID oder Pfad
+  --port PORT     Port for the server (default: 8002)
+  --model MODEL   Model ID or path
 ```
 
 ## Integration
 
-### Mit RemedyScribe
+### With RemedyScribe
 
-Der Server kann direkt mit [RemedyScribe](https://github.com/riedemannai/remedy-scribe) verwendet werden:
+The server can be used directly with [RemedyScribe](https://github.com/riedemannai/remedy-scribe):
 
 ```bash
-# Terminal 1: Starte Parakeet Server
+# Terminal 1: Start Parakeet Server
 ./start_server.sh
 
-# Terminal 2: Starte RemedyScribe Web-App
+# Terminal 2: Start RemedyScribe Web App
 cd ../remedy-scribe
 ./start_remedy_scribe_simple.sh
 ```
 
-### Mit OpenAI-kompatiblen Clients
+### With OpenAI-Compatible Clients
 
-Der Server ist vollständig kompatibel mit OpenAI-kompatiblen Clients:
+The server is fully compatible with OpenAI-compatible clients:
 
 ```python
 import openai
@@ -214,70 +214,70 @@ with open("audio.wav", "rb") as audio_file:
 print(transcript.text)
 ```
 
-## Entwicklung
+## Development
 
-### Lokale Entwicklung
+### Local Development
 
 ```bash
-# Mit Hot-Reload
+# With hot-reload
 uvicorn parakeet_server:app --reload --port 8002
 ```
 
-### Tests
+### Testing
 
 ```bash
-# Health Check
+# Health check
 curl http://localhost:8002/health
 
-# Modelle auflisten
+# List models
 curl http://localhost:8002/v1/models
 
-# Transkription testen
+# Test transcription
 curl -X POST "http://localhost:8002/v1/audio/transcriptions" \
   -F "file=@test_audio.wav" \
   -F "model=parakeet-tdt-0.6b-v3" \
   -F "language=de"
 ```
 
-## Fehlerbehebung
+## Troubleshooting
 
-### Model nicht gefunden
+### Model Not Found
 
-Stellen Sie sicher, dass das Model heruntergeladen wurde:
+Make sure the model has been downloaded:
 ```bash
 python -c "from huggingface_hub import snapshot_download; snapshot_download('mlx-community/parakeet-tdt-0.6b-v3')"
 ```
 
-### Port bereits belegt
+### Port Already in Use
 
-Verwenden Sie einen anderen Port:
+Use a different port:
 ```bash
 PORT=8080 ./start_server.sh
 ```
 
-### Parakeet-MLX nicht installiert
+### Parakeet-MLX Not Installed
 
 ```bash
 pip install -U parakeet-mlx
 ```
 
-## Technische Details
+## Technical Details
 
 - **Framework**: FastAPI
 - **Server**: Uvicorn
-- **Model-Backend**: Parakeet-MLX
-- **Audio-Verarbeitung**: librosa, soundfile
-- **API-Kompatibilität**: OpenAI Whisper API v1
+- **Model Backend**: Parakeet-MLX
+- **Audio Processing**: librosa, soundfile
+- **API Compatibility**: OpenAI Whisper API v1
 
-## Lizenz
+## License
 
-MIT License - siehe [LICENSE](LICENSE) Datei
+MIT License - see [LICENSE](LICENSE) file
 
-## Danksagungen
+## Acknowledgments
 
-- [Parakeet-MLX](https://github.com/mlx-community/parakeet) - MLX-optimierte Transkriptions-Modelle
-- [FastAPI](https://fastapi.tiangolo.com/) - Modernes Web-Framework
-- [MLX](https://github.com/ml-explore/mlx) - Machine Learning Framework für Apple Silicon
+- [Parakeet-MLX](https://github.com/mlx-community/parakeet) - MLX-optimized transcription models
+- [FastAPI](https://fastapi.tiangolo.com/) - Modern web framework
+- [MLX](https://github.com/ml-explore/mlx) - Machine learning framework for Apple Silicon
 
 ---
 
@@ -285,7 +285,6 @@ MIT License - siehe [LICENSE](LICENSE) Datei
 
 **Made with ❤️ for the MLX community**
 
-[⭐ Star auf GitHub](https://github.com/riedemannai/parakeet-mlx-server) • [🐛 Issues](https://github.com/riedemannai/parakeet-mlx-server/issues)
+[⭐ Star on GitHub](https://github.com/riedemannai/parakeet-mlx-server) • [🐛 Issues](https://github.com/riedemannai/parakeet-mlx-server/issues)
 
 </div>
-
