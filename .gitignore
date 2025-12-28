@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+server.log
+
+# Model files (zu groß für Git)
+*.safetensors
+*.bin
+*.pt
+*.pth
+models/
+.cache/
+
+# Temporary files
+*.tmp
+*.temp
+*.wav
+*.mp3
+*.flac
