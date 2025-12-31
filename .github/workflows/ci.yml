@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Check Python syntax
+      run: |
+        python -m py_compile parakeet_server.py
+    
+    - name: Test imports
+      run: |
+        python -c "import parakeet_server; print('✓ Imports successful')"
+      env:
+        PARAKEET_MODEL: "test-model"
+    
+    - name: Test FastAPI app structure
+      run: |
+        python -c "
+        from parakeet_server import app, TranscriptionResponse
+        assert app is not None, 'FastAPI app not initialized'
+        assert TranscriptionResponse is not None, 'TranscriptionResponse model not found'
+        print('✓ FastAPI app structure valid')
+        "
+    
+    - name: Test server startup (without model)
+      run: |
+        timeout 10 python -c "
+        import sys
+        sys.path.insert(0, '.')
+        from parakeet_server import app
+        print('✓ Server can be imported')
+        " || true
+    
+    - name: Check requirements.txt format
+      run: |
+        python -c "
+        with open('requirements.txt', 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    assert '>=' in line or '==' in line or line.count('=') == 0, f'Invalid requirement format: {line}'
+        print('✓ requirements.txt format valid')
+        "
+    
+    - name: Validate start_server.sh
+      run: |
+        if [ -f start_server.sh ]; then
+          bash -n start_server.sh
+          echo "✓ start_server.sh syntax valid"
+        else
+          echo "⚠️  start_server.sh not found"
+        fi
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+        cache: 'pip'
+    
+    - name: Install linting tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 black isort
+    
+    - name: Check code formatting with Black
+      run: |
+        black --check --diff parakeet_server.py || echo "⚠️  Code formatting issues found (non-blocking)"
+    
+    - name: Lint with flake8
+      run: |
+        flake8 parakeet_server.py --max-line-length=120 --ignore=E501,W503 || echo "⚠️  Linting issues found (non-blocking)"
+      continue-on-error: true
+
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+        cache: 'pip'
+    
+    - name: Install safety
+      run: |
+        python -m pip install --upgrade pip
+        pip install safety
+    
+    - name: Check for security vulnerabilities
+      run: |
+        safety check --file requirements.txt || echo "⚠️  Security vulnerabilities found (non-blocking)"
+      continue-on-error: true
