@@ -5,9 +5,11 @@
 [![CI](https://github.com/riedemannai/parakeet-mlx-server/actions/workflows/ci.yml/badge.svg)](https://github.com/riedemannai/parakeet-mlx-server/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Model](https://img.shields.io/badge/Model-NeurologyAI%2Fneuro--parakeet--mlx-blue)](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx)
 [![Dataset](https://img.shields.io/badge/Dataset-NeurologyAI%2Fneuro--whisper--v1-green)](https://huggingface.co/datasets/NeurologyAI/neuro-whisper-v1)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+> 🍎 **Apple Silicon Only** | 🏥 **Medical Speech Recognition** | 🚀 **OpenAI-Compatible API**
 
 ---
 
@@ -21,11 +23,13 @@ This server is designed to work with the [NeurologyAI/neuro-parakeet-mlx](https:
 
 * 🚀 **OpenAI-Compatible API** - Direct drop-in replacement for OpenAI Whisper API
 * 🍎 **Apple Silicon Optimized** - Uses MLX for optimal performance on Mac (M1/M2/M3/M4)
-* 📝 **Automatic Transcription** - Supports various audio formats
-* 🏥 **Medical Domain Specialized** - Optimized for German medical terminology
+* 📝 **Automatic Transcription** - Supports various audio formats (WAV, MP3, FLAC, M4A, etc.)
+* 🏥 **Medical Domain Specialized** - Optimized for German medical terminology (1.04% WER)
 * 🌍 **Multilingual** - Supports multiple languages (optimized for German)
-* ⚡ **Fast** - Optimized for local inference
+* ⚡ **Fast** - Optimized for local inference with MLX
 * 🔧 **Easy to Use** - Simple installation and configuration
+* 📚 **Interactive API Docs** - Built-in Swagger UI and ReDoc
+* 🏥 **Health Monitoring** - Health check endpoint for production use
 
 ## Installation
 
@@ -422,5 +426,15 @@ MIT License - see LICENSE file
 
 **Made with ❤️ for the MLX community**
 
-⭐ [Star on GitHub](https://github.com/riedemannai/parakeet-mlx-server) • 🐛 [Issues](https://github.com/riedemannai/parakeet-mlx-server/issues) • 📦 [Model on Hugging Face](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx)
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) and [Code of Conduct](.github/CODE_OF_CONDUCT.md) first.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+⭐ [Star on GitHub](https://github.com/riedemannai/parakeet-mlx-server) • 🐛 [Report Bug](https://github.com/riedemannai/parakeet-mlx-server/issues/new?template=bug_report.md) • 💡 [Request Feature](https://github.com/riedemannai/parakeet-mlx-server/issues/new?template=feature_request.md) • 📖 [Documentation](https://github.com/riedemannai/parakeet-mlx-server#readme) • 💬 [Discussions](https://github.com/riedemannai/parakeet-mlx-server/discussions) • 📦 [Model on Hugging Face](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx)
 
