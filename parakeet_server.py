@@ -13,6 +13,9 @@ import re
 import tempfile
 import argparse
 import logging
+import sys
+import shutil
+import socket
 from datetime import datetime
 
 logging.basicConfig(level=logging.INFO)
@@ -44,6 +47,101 @@ except ImportError:
 
 model = None
 DEFAULT_MODEL = os.getenv("PARAKEET_MODEL", "NeurologyAI/neuro-parakeet-mlx")
+
+def check_python_version():
+    """Check if Python version is 3.10 or higher."""
+    if sys.version_info < (3, 10):
+        logger.error(f"Python 3.10+ required, but found {sys.version_info.major}.{sys.version_info.minor}")
+        return False
+    return True
+
+def check_disk_space(path, required_gb=5):
+    """Check if there's enough disk space (default 5GB for model download)."""
+    try:
+        stat = shutil.disk_usage(path)
+        free_gb = stat.free / (1024**3)
+        if free_gb < required_gb:
+            logger.warning(f"Low disk space: {free_gb:.2f}GB free, {required_gb}GB recommended for model download")
+            return False
+        return True
+    except Exception as e:
+        logger.warning(f"Could not check disk space: {e}")
+        return True  # Don't fail if we can't check
+
+def check_port_available(port):
+    """Check if a port is available."""
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(1)
+            result = s.connect_ex(('localhost', port))
+            if result == 0:
+                logger.error(f"Port {port} is already in use!")
+                return False
+        return True
+    except Exception as e:
+        logger.warning(f"Could not check port availability: {e}")
+        return True  # Don't fail if we can't check
+
+def check_temp_directory():
+    """Check if temp directory is writable."""
+    try:
+        test_file = tempfile.NamedTemporaryFile(delete=True)
+        test_file.close()
+        return True
+    except Exception as e:
+        logger.error(f"Temp directory is not writable: {e}")
+        return False
+
+def check_huggingface_cache():
+    """Check HuggingFace cache directory."""
+    cache_dir = os.path.expanduser("~/.cache/huggingface")
+    if os.path.exists(cache_dir):
+        if not os.access(cache_dir, os.W_OK):
+            logger.warning(f"HuggingFace cache directory is not writable: {cache_dir}")
+            return False
+    return True
+
+def validate_system_requirements():
+    """Validate system requirements and log warnings."""
+    logger.info("Validating system requirements...")
+    
+    issues = []
+    warnings = []
+    
+    # Check Python version
+    if not check_python_version():
+        issues.append("Python version < 3.10")
+    
+    # Check temp directory
+    if not check_temp_directory():
+        issues.append("Temp directory not writable")
+    
+    # Check HuggingFace cache
+    if not check_huggingface_cache():
+        warnings.append("HuggingFace cache may not be writable")
+    
+    # Check disk space (for model downloads)
+    cache_dir = os.path.expanduser("~/.cache")
+    if not check_disk_space(cache_dir, required_gb=5):
+        warnings.append("Low disk space for model download")
+    
+    if issues:
+        logger.error("=" * 60)
+        logger.error("CRITICAL ISSUES FOUND:")
+        for issue in issues:
+            logger.error(f"  - {issue}")
+        logger.error("=" * 60)
+        return False
+    
+    if warnings:
+        logger.warning("=" * 60)
+        logger.warning("WARNINGS:")
+        for warning in warnings:
+            logger.warning(f"  - {warning}")
+        logger.warning("=" * 60)
+    
+    logger.info("System requirements validation passed")
+    return True
 
 class TranscriptionResponse(BaseModel):
     text: str
@@ -194,6 +292,29 @@ async def root():
         return FileResponse(index_path, media_type="text/html")
     return {"status": "ok" if model else "error"}
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint - returns server and model status."""
+    import sys
+    import shutil
+    
+    health_status = {
+        "status": "healthy" if model else "unhealthy",
+        "model_loaded": model is not None,
+        "python_version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
+        "system": sys.platform
+    }
+    
+    # Add disk space info
+    try:
+        stat = shutil.disk_usage(os.path.expanduser("~"))
+        health_status["disk_space_gb"] = round(stat.free / (1024**3), 2)
+    except Exception:
+        pass
+    
+    status_code = 200 if model else 503
+    return health_status
+
 @app.get("/transcription")
 async def transcription_ui():
     """Serve the transcription UI interface."""
@@ -260,11 +381,25 @@ async def create_transcription(file: UploadFile = File(...), model_name: str = F
     if not model:
         raise HTTPException(status_code=500, detail="Model not loaded")
     
+    # Validate file
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No filename provided")
+    
+    # Check file size (limit to 100MB)
+    MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB
+    file_content = await file.read()
+    if len(file_content) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail=f"File too large. Maximum size is {MAX_FILE_SIZE / (1024*1024):.0f}MB")
+    
+    # Check if file is empty
+    if len(file_content) == 0:
+        raise HTTPException(status_code=400, detail="Empty file provided")
+    
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
         p = tmp.name
     try:
         with open(p, 'wb') as f:
-            f.write(await file.read())
+            f.write(file_content)
         try:
             r = model.transcribe(p, language="de")
         except TypeError:
@@ -292,15 +427,29 @@ if __name__ == "__main__":
     p.add_argument("--model", type=str, default=None)
     p.add_argument("--port", type=int, default=None)
     p.add_argument("--proxy-headers", action="store_true", default=True, help="Trust proxy headers (for reverse proxy)")
+    p.add_argument("--skip-validation", action="store_true", help="Skip system requirements validation")
     a = p.parse_args()
     if a.model:
         os.environ["PARAKEET_MODEL"] = a.model
+    
+    port = a.port or int(os.getenv("PORT", 8002))
+    
+    # Validate system requirements
+    if not a.skip_validation:
+        if not validate_system_requirements():
+            logger.error("System requirements validation failed. Use --skip-validation to proceed anyway.")
+            sys.exit(1)
+        
+        # Check port availability
+        if not check_port_available(port):
+            logger.error(f"Port {port} is already in use. Please choose a different port.")
+            sys.exit(1)
     
     # Configure uvicorn to trust proxy headers (important for nginx reverse proxy)
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=a.port or int(os.getenv("PORT", 8002)),
+        port=port,
         proxy_headers=True,  # Trust X-Forwarded-* headers from reverse proxy
         forwarded_allow_ips="*"  # Allow forwarded headers from any IP (adjust for production)
     )
