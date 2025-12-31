@@ -24,8 +24,13 @@ OpenAI-compatible FastAPI server for audio transcription optimized for German ne
 
 ## Topics/Tags
 
-Add the following topics to improve discoverability:
+Add the following topics to improve discoverability (copy and paste into GitHub):
 
+```
+fastapi mlx apple-silicon m4 speech-recognition transcription neurology neuro-oncology german-language openai-compatible parakeet whisper-alternative asr audio-transcription medical-ai
+```
+
+**Individual topics:**
 - `fastapi`
 - `mlx`
 - `apple-silicon`
