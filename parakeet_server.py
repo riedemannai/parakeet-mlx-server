@@ -63,12 +63,37 @@ class NormalizePathMiddleware(BaseHTTPMiddleware):
 app.add_middleware(NormalizePathMiddleware)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
+def get_index_path():
+    """Get the path to index.html, checking multiple possible locations."""
+    # Try current file directory first
+    possible_paths = [
+        os.path.join(os.path.dirname(__file__), "index.html"),
+        os.path.join(os.path.dirname(__file__), "..", "index.html"),
+        os.path.join(os.getcwd(), "index.html"),
+        "index.html",  # Current working directory
+    ]
+    
+    for path in possible_paths:
+        abs_path = os.path.abspath(path)
+        if os.path.exists(abs_path):
+            return abs_path
+    return None
+
 @app.get("/")
 async def root():
-    index_path = os.path.join(os.path.dirname(__file__), "index.html")
-    if os.path.exists(index_path):
-        return FileResponse(index_path)
+    """Root endpoint - serves index.html if available, otherwise returns status."""
+    index_path = get_index_path()
+    if index_path:
+        return FileResponse(index_path, media_type="text/html")
     return {"status": "ok" if model else "error"}
+
+@app.get("/transcription")
+async def transcription_ui():
+    """Serve the transcription UI interface."""
+    index_path = get_index_path()
+    if index_path:
+        return FileResponse(index_path, media_type="text/html")
+    return {"status": "ok" if model else "error", "message": "Transcription UI not found"}
 
 def extract_text(r):
     if hasattr(r, 'text'):
