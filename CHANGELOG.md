@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dependency check warnings in start script
 
 ### Changed
-- Default model changed to `NeurologyAI/neuro-parakeet-mlx` (recommended for German medical speech)
+- Default model changed to `NeurologyAI/neuro-parakeet-mlx` (recommended for German neurology and neuro-oncology terminology)
 - Updated all dependencies to latest versions
 - Improved error handling and logging throughout
 - Enhanced troubleshooting documentation

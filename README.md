@@ -11,7 +11,7 @@
 [![Model](https://img.shields.io/badge/Model-NeurologyAI%2Fneuro--parakeet--mlx-blue)](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx)
 [![Dataset](https://img.shields.io/badge/Dataset-NeurologyAI%2Fneuro--whisper--v1-green)](https://huggingface.co/datasets/NeurologyAI/neuro-whisper-v1)
 
-> 🍎 **Apple Silicon Only** | 🏥 **Medical Speech Recognition** | 🚀 **OpenAI-Compatible API**
+> 🍎 **Apple Silicon Only** | 🧠 **Neurology & Neuro-Oncology Speech Recognition** | 🚀 **OpenAI-Compatible API**
 
 ---
 
@@ -19,14 +19,14 @@
 
 Neuro-Parakeet MLX Server is an OpenAI-compatible FastAPI server for audio transcription using Parakeet-MLX models. The server is specifically optimized for Apple Silicon (MLX) and provides a fully compatible API to OpenAI's Whisper API.
 
-This server is designed to work with the [NeurologyAI/neuro-parakeet-mlx](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx) model, a fine-tuned Parakeet TDT 0.6B model optimized for German medical/neurological speech recognition.
+This server is designed to work with the [NeurologyAI/neuro-parakeet-mlx](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx) model, a fine-tuned Parakeet TDT 0.6B model optimized for German neurology and neuro-oncology terminology.
 
 ## Features
 
 * 🚀 **OpenAI-Compatible API** - Direct drop-in replacement for OpenAI Whisper API
 * 🍎 **Apple Silicon Optimized** - Uses MLX for optimal performance on Mac (M1/M2/M3/M4)
 * 📝 **Automatic Transcription** - Supports various audio formats (WAV, MP3, FLAC, M4A, etc.)
-* 🏥 **Medical Domain Specialized** - Optimized for German medical terminology (1.04% WER)
+* 🧠 **Neurology & Neuro-Oncology Specialized** - Optimized for German neurology and neuro-oncology terminology
 * 🌍 **Multilingual** - Supports multiple languages (optimized for German)
 * ⚡ **Fast** - Optimized for local inference with MLX
 * 🔧 **Easy to Use** - Simple installation and configuration
@@ -121,11 +121,11 @@ python parakeet_server.py --port 8002 --model NeurologyAI/neuro-parakeet-mlx
 
 ### Available Models
 
-* `NeurologyAI/neuro-parakeet-mlx` (recommended) - Fine-tuned for German medical speech (1.04% WER)
+* `NeurologyAI/neuro-parakeet-mlx` (recommended) - Fine-tuned for German neurology and neuro-oncology terminology
 * `mlx-community/parakeet-tdt-0.6b-v3` (default) - Base multilingual model
 
 **Model Performance:**
-- **NeurologyAI/neuro-parakeet-mlx**: 1.04% WER on German medical speech (validation set)
+- **NeurologyAI/neuro-parakeet-mlx**: Optimized for German neurology and neuro-oncology terminology
 - Trained on [NeurologyAI/neuro-whisper-v1](https://huggingface.co/datasets/NeurologyAI/neuro-whisper-v1) dataset
 - See [model README](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx) for details
 
@@ -281,10 +281,9 @@ curl -X POST "http://localhost:8002/v1/audio/transcriptions" \
 
 ### Recommended Model: NeurologyAI/neuro-parakeet-mlx
 
-- **WER**: 1.04% on German medical speech validation set
 - **Training Dataset**: [NeurologyAI/neuro-whisper-v1](https://huggingface.co/datasets/NeurologyAI/neuro-whisper-v1)
 - **Base Model**: [nvidia/parakeet-tdt-0.6b-v3](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3)
-- **Domain**: German medical/neurological speech recognition
+- **Domain**: German neurology and neuro-oncology speech recognition
 - **License**: CC-BY-4.0
 
 For detailed model information, see the [model README on Hugging Face](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx).
@@ -303,7 +302,7 @@ MIT License - see LICENSE file
 
 ## Acknowledgments
 
-* [NeurologyAI/neuro-parakeet-mlx](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx) - Fine-tuned model for German medical speech
+* [NeurologyAI/neuro-parakeet-mlx](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx) - Fine-tuned model for German neurology and neuro-oncology terminology
 * [NeurologyAI/neuro-whisper-v1](https://huggingface.co/datasets/NeurologyAI/neuro-whisper-v1) - Training dataset
 * [NVIDIA Parakeet TDT 0.6B V3](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3) - Base transcription model by NVIDIA
 * [FastAPI](https://fastapi.tiangolo.com/) - Modern web framework
