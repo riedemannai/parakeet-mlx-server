@@ -37,7 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Web UI for audio transcription
 - Automatic model downloading from HuggingFace
 - CORS middleware support
-- Reverse proxy support (nginx)
 - Comprehensive test suite
 - Pre-commit hooks for code quality
 - CI/CD pipeline with GitHub Actions

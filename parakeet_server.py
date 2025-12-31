@@ -152,19 +152,19 @@ def load_model(model_id: Optional[str] = None):
     global model
     if model is None and from_pretrained:
         try:
-            model_id = model_id or os.getenv("PARAKEET_MODEL", DEFAULT_MODEL)
+        model_id = model_id or os.getenv("PARAKEET_MODEL", DEFAULT_MODEL)
             logger.info(f"Loading model: {model_id}")
-            if "/" in model_id and not os.path.exists(model_id) and snapshot_download:
-                try:
+        if "/" in model_id and not os.path.exists(model_id) and snapshot_download:
+            try:
                     logger.info(f"Downloading model from HuggingFace (local only)...")
-                    cache_dir = snapshot_download(repo_id=model_id, repo_type="model", local_files_only=True)
+                cache_dir = snapshot_download(repo_id=model_id, repo_type="model", local_files_only=True)
                     model_id = cache_dir
                 except Exception as e:
                     logger.warning(f"Local download failed: {e}, trying with network access...")
-                    cache_dir = snapshot_download(repo_id=model_id, repo_type="model", local_files_only=False)
-                    model_id = cache_dir
+                cache_dir = snapshot_download(repo_id=model_id, repo_type="model", local_files_only=False)
+            model_id = cache_dir
             logger.info(f"Loading model from: {model_id}")
-            model = from_pretrained(model_id)
+        model = from_pretrained(model_id)
             logger.info("Model loaded successfully!")
         except Exception as e:
             logger.error(f"Failed to load model: {e}", exc_info=True)
@@ -179,7 +179,7 @@ def load_model(model_id: Optional[str] = None):
 async def lifespan(app: FastAPI):
     if from_pretrained:
         try:
-            load_model()
+        load_model()
             if model is None:
                 logger.error("Model failed to load during startup!")
         except Exception as e:
@@ -242,12 +242,9 @@ class NormalizePathMiddleware(BaseHTTPMiddleware):
             request = Request(s)
         return await call_next(request)
 
-class ReverseProxyMiddleware(BaseHTTPMiddleware):
-    """Middleware to handle reverse proxy forwarded headers (nginx, etc.)."""
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Middleware to add security headers."""
     async def dispatch(self, request: Request, call_next):
-        # This middleware ensures the app works correctly behind a reverse proxy
-        # The actual header handling is done by uvicorn's proxy_headers=True
-        # We just add some response headers here
         response = await call_next(request)
         
         # Add security headers
@@ -256,8 +253,8 @@ class ReverseProxyMiddleware(BaseHTTPMiddleware):
         
         return response
 
-# Add middlewares in order (reverse proxy first, then path normalization, then CORS)
-app.add_middleware(ReverseProxyMiddleware)
+# Add middlewares in order (security headers, path normalization, then CORS)
+app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(NormalizePathMiddleware)
 app.add_middleware(
     CORSMiddleware,
@@ -426,7 +423,6 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--model", type=str, default=None)
     p.add_argument("--port", type=int, default=None)
-    p.add_argument("--proxy-headers", action="store_true", default=True, help="Trust proxy headers (for reverse proxy)")
     p.add_argument("--skip-validation", action="store_true", help="Skip system requirements validation")
     a = p.parse_args()
     if a.model:
@@ -445,12 +441,10 @@ if __name__ == "__main__":
             logger.error(f"Port {port} is already in use. Please choose a different port.")
             sys.exit(1)
     
-    # Configure uvicorn to trust proxy headers (important for nginx reverse proxy)
+    # Configure uvicorn
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=port,
-        proxy_headers=True,  # Trust X-Forwarded-* headers from reverse proxy
-        forwarded_allow_ips="*"  # Allow forwarded headers from any IP (adjust for production)
+        port=port
     )
 

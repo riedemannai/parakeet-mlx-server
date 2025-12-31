@@ -297,50 +297,6 @@ For detailed model information, see the [model README on Hugging Face](https://h
 * **Audio Processing**: librosa, soundfile
 * **API Compatibility**: OpenAI Whisper API v1
 
-## Reverse Proxy Configuration (Nginx)
-
-The server is configured to work behind an nginx reverse proxy. See `nginx_example.conf` for a complete example configuration.
-
-### Quick Nginx Setup
-
-1. **Install nginx** (if not already installed):
-   ```bash
-   # macOS
-   brew install nginx
-   
-   # Ubuntu/Debian
-   sudo apt-get install nginx
-   ```
-
-2. **Create nginx configuration**:
-   ```bash
-   sudo nano /etc/nginx/sites-available/parakeet-server
-   ```
-   
-   Copy the configuration from `nginx_example.conf` and adjust:
-   - Server name/IP
-   - Port (if different from 8002)
-   - SSL certificates (if using HTTPS)
-
-3. **Enable the site**:
-   ```bash
-   sudo ln -s /etc/nginx/sites-available/parakeet-server /etc/nginx/sites-enabled/
-   sudo nginx -t  # Test configuration
-   sudo systemctl reload nginx  # Reload nginx
-   ```
-
-4. **Start the server**:
-   ```bash
-   ./start_server.sh
-   ```
-
-### Important Nginx Settings
-
-- **`proxy_method POST`** - Ensures POST requests are forwarded correctly
-- **`client_max_body_size 100M`** - Allows large audio file uploads
-- **`proxy_buffering off`** - Prevents buffering issues with file uploads
-- **X-Forwarded-* headers** - Properly forwarded for correct URL generation
-
 ## License
 
 MIT License - see LICENSE file
