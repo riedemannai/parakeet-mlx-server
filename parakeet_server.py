@@ -60,6 +60,8 @@ def load_model(model_id: Optional[str] = None):
             raise
     elif model is None:
         logger.error("parakeet_mlx.from_pretrained is not available. Please install parakeet-mlx.")
+        logger.error("Install with: pip install -r requirements.txt")
+        logger.error("Or: pip install parakeet-mlx")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -71,7 +73,13 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.error(f"Error during model loading in lifespan: {e}", exc_info=True)
     else:
-        logger.error("parakeet_mlx is not available. Please install parakeet-mlx package.")
+        logger.error("=" * 60)
+        logger.error("ERROR: parakeet_mlx is not available!")
+        logger.error("Please install dependencies:")
+        logger.error("  pip install -r requirements.txt")
+        logger.error("Or install directly:")
+        logger.error("  pip install parakeet-mlx")
+        logger.error("=" * 60)
     yield
 
 app = FastAPI(lifespan=lifespan)

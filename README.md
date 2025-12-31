@@ -47,14 +47,16 @@ conda activate neuro-parakeet-mlx-server
 git clone https://github.com/riedemannai/parakeet-mlx-server.git
 cd parakeet-mlx-server
 
-# 4. Install dependencies
+# 4. Install dependencies (IMPORTANT: Do this step!)
 pip install -r requirements.txt
 
 # 5. Start server
 ./start_server.sh
 ```
 
-**Note:** Always activate the conda environment before running the server:
+**Important:** Make sure to install dependencies with `pip install -r requirements.txt` after creating the conda environment. The server will not work without this step!
+
+**Note:** The start script (`./start_server.sh`) will automatically activate the conda environment if it exists. You can also manually activate it:
 ```bash
 conda activate neuro-parakeet-mlx-server
 ./start_server.sh
