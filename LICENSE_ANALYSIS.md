@@ -11,7 +11,7 @@
 |---------|---------|---------------------|
 | `fastapi` | Apache 2.0 | ✅ Yes |
 | `uvicorn[standard]` | BSD | ✅ Yes |
-| `parakeet-mlx` | Need to verify | ⚠️ Check required |
+| `parakeet-mlx` | Apache 2.0 | ✅ Yes |
 | `huggingface-hub` | Apache 2.0 | ✅ Yes |
 | `pydantic` | MIT | ✅ Yes |
 | `python-multipart` | Apache 2.0 | ✅ Yes |
@@ -68,9 +68,13 @@ The models used by this server have their own licenses:
 
 ## Current Status
 
-**Status**: ✅ MIT License appears to be compatible
+**Status**: ✅ **MIT License is fully compatible**
 
-**Action Required**: Verify `parakeet-mlx` license to confirm compatibility.
+**Verification Complete**: All dependencies verified:
+- ✅ `parakeet-mlx`: Apache 2.0 (verified via PyPI)
+- ✅ All other dependencies: Permissive licenses (MIT/Apache 2.0/BSD)
+
+**Conclusion**: MIT License is appropriate and compatible with all dependencies.
 
 ## References
 
