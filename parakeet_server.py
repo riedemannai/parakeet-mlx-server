@@ -29,7 +29,7 @@ except ImportError:
     snapshot_download = None
 
 model = None
-DEFAULT_MODEL = os.getenv("PARAKEET_MODEL", "mlx-community/parakeet-tdt-0.6b-v3")
+DEFAULT_MODEL = os.getenv("PARAKEET_MODEL", "NeurologyAI/neuro-parakeet-mlx")
 
 class TranscriptionResponse(BaseModel):
     text: str

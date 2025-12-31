@@ -2,7 +2,7 @@
 # Start Neuro-Parakeet MLX Server
 
 PORT=${PORT:-8002}
-MODEL=${PARAKEET_MODEL:-mlx-community/parakeet-tdt-0.6b-v3}
+MODEL=${PARAKEET_MODEL:-NeurologyAI/neuro-parakeet-mlx}
 
 echo "Starting Neuro-Parakeet MLX Server..."
 echo "  Port: $PORT"
