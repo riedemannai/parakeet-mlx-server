@@ -217,7 +217,7 @@ def load_model(model_id: Optional[str] = None):
 async def lifespan(app: FastAPI):
     if from_pretrained:
         try:
-        load_model()
+            load_model()
             if model is None:
                 logger.error("Model failed to load during startup!")
         except Exception as e:
