@@ -20,8 +20,22 @@ logger = logging.getLogger(__name__)
 
 try:
     from parakeet_mlx import from_pretrained
-except ImportError:
+except ImportError as e:
     from_pretrained = None
+    import sys
+    error_msg = str(e)
+    logger.warning(f"Failed to import parakeet_mlx: {e}")
+    
+    # Check if it's an MLX library issue (not available on non-Apple Silicon)
+    if "libmlx.so" in error_msg or "cannot open shared object file" in error_msg:
+        logger.error("=" * 60)
+        logger.error("ERROR: MLX library not available!")
+        logger.error("This server requires Apple Silicon (M1/M2/M3/M4) Mac.")
+        logger.error("MLX (Apple's machine learning framework) is not available on Linux/Windows.")
+        logger.error("=" * 60)
+    else:
+        logger.warning(f"Python path: {sys.path}")
+        logger.warning(f"Python executable: {sys.executable}")
 
 try:
     from huggingface_hub import snapshot_download
@@ -73,12 +87,47 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.error(f"Error during model loading in lifespan: {e}", exc_info=True)
     else:
+        import sys
+        import subprocess
         logger.error("=" * 60)
         logger.error("ERROR: parakeet_mlx is not available!")
+        logger.error(f"Python executable: {sys.executable}")
+        logger.error(f"Python version: {sys.version}")
+        
+        # Try to check if package is installed and diagnose the issue
+        try:
+            result = subprocess.run(
+                [sys.executable, "-m", "pip", "show", "parakeet-mlx"],
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            if result.returncode == 0:
+                # Try to import to see the actual error
+                import_result = subprocess.run(
+                    [sys.executable, "-c", "import parakeet_mlx"],
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                if "libmlx.so" in import_result.stderr or "cannot open shared object file" in import_result.stderr:
+                    logger.error("Package 'parakeet-mlx' is installed but MLX library is not available!")
+                    logger.error("This server requires Apple Silicon (M1/M2/M3/M4) Mac.")
+                    logger.error("MLX is Apple's framework and only works on macOS with Apple Silicon.")
+                else:
+                    logger.error("Package 'parakeet-mlx' is installed but cannot be imported!")
+                    logger.error("This might be a Python path or environment issue.")
+                    logger.error("Try: pip install --force-reinstall parakeet-mlx")
+            else:
+                logger.error("Package 'parakeet-mlx' is NOT installed!")
+        except Exception as e:
+            logger.error(f"Could not check package status: {e}")
+        
+        logger.error("")
         logger.error("Please install dependencies:")
-        logger.error("  pip install -r requirements.txt")
+        logger.error(f"  {sys.executable} -m pip install -r requirements.txt")
         logger.error("Or install directly:")
-        logger.error("  pip install parakeet-mlx")
+        logger.error(f"  {sys.executable} -m pip install parakeet-mlx")
         logger.error("=" * 60)
     yield
 

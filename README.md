@@ -28,8 +28,10 @@ This server is designed to work with the [NeurologyAI/neuro-parakeet-mlx](https:
 
 ### Prerequisites
 
+* **Apple Silicon Mac (M1/M2/M3/M4) - REQUIRED**
+  * This server uses MLX (Apple's machine learning framework) which only works on Apple Silicon
+  * **Does NOT work on Linux, Windows, or Intel Macs**
 * Python 3.10 or higher
-* Apple Silicon Mac (M1/M2/M3/M4) or system with MLX support
 * pip, uv, or conda
 
 ### Recommended: Conda Environment Setup
@@ -266,9 +268,56 @@ PORT=8080 ./start_server.sh
 
 ### Parakeet-MLX Not Installed
 
-```bash
-pip install -U parakeet-mlx
-```
+If you get an error that `parakeet_mlx` is not available even after installing requirements:
+
+1. **Check if you're on Apple Silicon Mac:**
+   ```bash
+   # On macOS, check your processor
+   sysctl -n machdep.cpu.brand_string
+   # Should show "Apple" for M1/M2/M3/M4 chips
+   ```
+   **Important:** This server requires Apple Silicon (M1/M2/M3/M4). It does NOT work on:
+   - Linux systems
+   - Windows systems
+   - Intel Macs
+   - Other non-Apple Silicon platforms
+
+2. **If you see "libmlx.so: cannot open shared object file" error:**
+   This means you're trying to run on a non-Apple Silicon system. MLX only works on Apple Silicon Macs.
+
+3. **Verify you're in the correct conda environment:**
+   ```bash
+   conda activate neuro-parakeet-mlx-server
+   which python  # Should show the conda environment path
+   ```
+
+4. **Check if the package is installed:**
+   ```bash
+   pip show parakeet-mlx
+   ```
+   If this shows nothing, the package is not installed.
+
+5. **Install/Reinstall the package (on Apple Silicon Mac only):**
+   ```bash
+   # Make sure you're in the conda environment first!
+   conda activate neuro-parakeet-mlx-server
+   pip install -r requirements.txt
+   # Or force reinstall
+   pip install --force-reinstall parakeet-mlx
+   ```
+
+6. **Verify the installation:**
+   ```bash
+   python -c "import parakeet_mlx; print('OK')"
+   ```
+   This should print "OK" without errors.
+
+7. **If still not working, check Python path:**
+   ```bash
+   python -c "import sys; print(sys.executable)"
+   python -c "import sys; print(sys.path)"
+   ```
+   Make sure the Python executable is from your conda environment.
 
 ## Model Information
 
