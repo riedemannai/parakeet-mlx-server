@@ -53,15 +53,41 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 _PATH_NORM_RE = re.compile(r'/+')
+
 class NormalizePathMiddleware(BaseHTTPMiddleware):
+    """Middleware to normalize duplicate slashes in paths."""
     async def dispatch(self, request: Request, call_next):
         if '//' in request.url.path:
             s = dict(request.scope)
             s["path"] = s["path_info"] = _PATH_NORM_RE.sub('/', request.url.path)
             request = Request(s)
         return await call_next(request)
+
+class ReverseProxyMiddleware(BaseHTTPMiddleware):
+    """Middleware to handle reverse proxy forwarded headers (nginx, etc.)."""
+    async def dispatch(self, request: Request, call_next):
+        # This middleware ensures the app works correctly behind a reverse proxy
+        # The actual header handling is done by uvicorn's proxy_headers=True
+        # We just add some response headers here
+        response = await call_next(request)
+        
+        # Add security headers
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        
+        return response
+
+# Add middlewares in order (reverse proxy first, then path normalization, then CORS)
+app.add_middleware(ReverseProxyMiddleware)
 app.add_middleware(NormalizePathMiddleware)
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]
+)
 
 def get_index_path():
     """Get the path to index.html, checking multiple possible locations."""
@@ -184,8 +210,17 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--model", type=str, default=None)
     p.add_argument("--port", type=int, default=None)
+    p.add_argument("--proxy-headers", action="store_true", default=True, help="Trust proxy headers (for reverse proxy)")
     a = p.parse_args()
     if a.model:
         os.environ["PARAKEET_MODEL"] = a.model
-    uvicorn.run(app, host="0.0.0.0", port=a.port or int(os.getenv("PORT", 8002)))
+    
+    # Configure uvicorn to trust proxy headers (important for nginx reverse proxy)
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=a.port or int(os.getenv("PORT", 8002)),
+        proxy_headers=True,  # Trust X-Forwarded-* headers from reverse proxy
+        forwarded_allow_ips="*"  # Allow forwarded headers from any IP (adjust for production)
+    )
 
