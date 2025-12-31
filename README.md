@@ -30,7 +30,35 @@ This server is designed to work with the [NeurologyAI/neuro-parakeet-mlx](https:
 
 * Python 3.10 or higher
 * Apple Silicon Mac (M1/M2/M3/M4) or system with MLX support
-* pip or uv
+* pip, uv, or conda
+
+### Recommended: Conda Environment Setup
+
+We recommend using a conda environment to manage dependencies and avoid conflicts with other Python packages.
+
+```bash
+# 1. Create a new conda environment with Python 3.10+
+conda create -n parakeet-mlx-server python=3.10 -y
+
+# 2. Activate the environment
+conda activate parakeet-mlx-server
+
+# 3. Clone repository
+git clone git@github.com:riedemannai/parakeet-mlx-server.git
+cd parakeet-mlx-server
+
+# 4. Install dependencies
+pip install -r requirements.txt
+
+# 5. Start server
+./start_server.sh
+```
+
+**Note:** Always activate the conda environment before running the server:
+```bash
+conda activate parakeet-mlx-server
+./start_server.sh
+```
 
 ### Quick Start
 
