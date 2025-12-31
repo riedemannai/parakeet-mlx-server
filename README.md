@@ -434,5 +434,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-⭐ [Star on GitHub](https://github.com/riedemannai/parakeet-mlx-server) • 🐛 [Report Bug](https://github.com/riedemannai/parakeet-mlx-server/issues/new?template=bug_report.md) • 💡 [Request Feature](https://github.com/riedemannai/parakeet-mlx-server/issues/new?template=feature_request.md) • 📖 [Documentation](https://github.com/riedemannai/parakeet-mlx-server#readme) • 💬 [Discussions](https://github.com/riedemannai/parakeet-mlx-server/discussions) • 📦 [Model on Hugging Face](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx)
+⭐ [Star on GitHub](https://github.com/riedemannai/parakeet-mlx-server) • 🐛 [Issues](https://github.com/riedemannai/parakeet-mlx-server/issues) • 📖 [Documentation](https://github.com/riedemannai/parakeet-mlx-server#readme) • 📦 [Model on Hugging Face](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx)
 
