@@ -77,9 +77,18 @@ jobs:
           echo "⚠️  start_server.sh not found"
         fi
     
-    - name: Run tests
+    - name: Run tests with coverage
       run: |
-        pytest tests/ -v --tb=short
+        pytest tests/ -v --tb=short --cov=parakeet_server --cov-report=xml --cov-report=term-missing
+      continue-on-error: true
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
       continue-on-error: true
 
   lint:

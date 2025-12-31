@@ -2,9 +2,12 @@
 
 **OpenAI-Compatible FastAPI Server for Audio Transcription with Parakeet-MLX**
 
+[![CI](https://github.com/riedemannai/parakeet-mlx-server/actions/workflows/ci.yml/badge.svg)](https://github.com/riedemannai/parakeet-mlx-server/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 [![Model](https://img.shields.io/badge/Model-NeurologyAI%2Fneuro--parakeet--mlx-blue)](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx)
 [![Dataset](https://img.shields.io/badge/Dataset-NeurologyAI%2Fneuro--whisper--v1-green)](https://huggingface.co/datasets/NeurologyAI/neuro-whisper-v1)
-[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ---
 
@@ -122,6 +125,16 @@ python parakeet_server.py --port 8002 --model NeurologyAI/neuro-parakeet-mlx
 
 ## API
 
+### 📚 Interactive API Documentation
+
+FastAPI provides automatic interactive API documentation:
+
+- **Swagger UI**: http://localhost:8002/docs
+- **ReDoc**: http://localhost:8002/redoc
+- **OpenAPI Schema**: http://localhost:8002/openapi.json
+
+These endpoints are available when the server is running and provide interactive documentation where you can test the API directly in your browser.
+
 ### OpenAI-Compatible Endpoints
 
 #### POST `/v1/audio/transcriptions`
@@ -234,6 +247,16 @@ print(transcript.text)
 # With hot-reload
 uvicorn parakeet_server:app --reload --port 8002
 ```
+
+### API Documentation
+
+When the server is running, you can access:
+
+- **Swagger UI** (Interactive): http://localhost:8002/docs
+- **ReDoc** (Alternative docs): http://localhost:8002/redoc
+- **OpenAPI Schema** (JSON): http://localhost:8002/openapi.json
+
+The Swagger UI allows you to test the API directly from your browser.
 
 ### Testing
 
