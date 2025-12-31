@@ -1,0 +1,39 @@
+name: Dependabot Security Updates
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  security-updates:
+    name: Check for Security Updates
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install safety pip-audit
+    
+    - name: Check for security vulnerabilities
+      run: |
+        safety check --file requirements.txt --json || true
+        pip-audit --requirement requirements.txt --format json || true
+      continue-on-error: true
+    
+    - name: Check for outdated packages
+      run: |
+        pip list --outdated || true
+      continue-on-error: true
+

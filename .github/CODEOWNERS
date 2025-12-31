@@ -1,0 +1,30 @@
+# This file defines code owners for the repository
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+* @riedemannai
+
+# Core server code
+/parakeet_server.py @riedemannai
+
+# Configuration files
+/.github/ @riedemannai
+/requirements.txt @riedemannai
+/requirements-dev.txt @riedemannai
+/start_server.sh @riedemannai
+
+# Security and compliance
+/.github/SECURITY.md @riedemannai
+/.github/CODE_OF_CONDUCT.md @riedemannai
+
+# Documentation
+/README.md @riedemannai
+/CHANGELOG.md @riedemannai
+/CONTRIBUTING.md @riedemannai
+
+# Tests
+/tests/ @riedemannai
+
+# Examples
+/examples/ @riedemannai
+

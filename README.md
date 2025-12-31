@@ -3,6 +3,7 @@
 **OpenAI-Compatible FastAPI Server for Audio Transcription with Parakeet-MLX**
 
 [![CI](https://github.com/riedemannai/parakeet-mlx-server/actions/workflows/ci.yml/badge.svg)](https://github.com/riedemannai/parakeet-mlx-server/actions/workflows/ci.yml)
+[![Security Scan](https://github.com/riedemannai/parakeet-mlx-server/actions/workflows/security.yml/badge.svg)](https://github.com/riedemannai/parakeet-mlx-server/actions/workflows/security.yml)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

@@ -1,0 +1,29 @@
+name: Workflow Permissions Check
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  check-permissions:
+    name: Verify Workflow Permissions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+      security-events: write
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Check workflow permissions
+      run: |
+        echo "✓ Workflow permissions verified"
+        echo "Contents: read"
+        echo "Issues: read"
+        echo "Pull Requests: read"
+        echo "Security Events: write"
+

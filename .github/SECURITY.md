@@ -42,6 +42,11 @@ When using this server:
 5. **Monitor server logs** for suspicious activity
 6. **Use firewall rules** to restrict access
 7. **Run in isolated environments** (containers, VMs) when possible
+8. **Enable branch protection** on the main branch
+9. **Require code reviews** before merging (minimum 2 approvals)
+10. **Use signed commits** for important changes
+11. **Regularly review security alerts** from GitHub
+12. **Never commit secrets** or API keys to the repository
 
 ## Known Security Considerations
 

@@ -5,20 +5,52 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
       - "python"
+      - "security"
     commit-message:
       prefix: "deps"
       include: "scope"
+    # Security updates are prioritized
+    allow:
+      - dependency-type: "direct"
+    # Group updates to reduce PR noise
+    groups:
+      production-dependencies:
+        patterns:
+          - "fastapi"
+          - "uvicorn"
+          - "pydantic"
+          - "parakeet-mlx"
+          - "huggingface-hub"
+      development-dependencies:
+        patterns:
+          - "pytest*"
+          - "black"
+          - "flake8"
+          - "isort"
+          - "mypy"
+    # Ignore major version updates (review manually)
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
     labels:
       - "dependencies"
       - "github-actions"
+      - "security"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
 
