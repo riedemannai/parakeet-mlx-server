@@ -44,7 +44,7 @@ conda create -n neuro-parakeet-mlx-server python=3.10 -y
 conda activate neuro-parakeet-mlx-server
 
 # 3. Clone repository
-git clone git@github.com:riedemannai/parakeet-mlx-server.git
+git clone https://github.com/riedemannai/parakeet-mlx-server.git
 cd parakeet-mlx-server
 
 # 4. Install dependencies
@@ -64,7 +64,7 @@ conda activate neuro-parakeet-mlx-server
 
 ```bash
 # 1. Clone repository
-git clone git@github.com:riedemannai/parakeet-mlx-server.git
+git clone https://github.com/riedemannai/parakeet-mlx-server.git
 cd parakeet-mlx-server
 
 # 2. Install dependencies
@@ -78,7 +78,7 @@ pip install -r requirements.txt
 
 ```bash
 # 1. Clone repository
-git clone git@github.com:riedemannai/parakeet-mlx-server.git
+git clone https://github.com/riedemannai/parakeet-mlx-server.git
 cd parakeet-mlx-server
 
 # 2. Install with UV
