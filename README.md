@@ -428,10 +428,6 @@ MIT License - see LICENSE file
 
 **Made with ❤️ for the MLX community**
 
-## 🤝 Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) and [Code of Conduct](.github/CODE_OF_CONDUCT.md) first.
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
