@@ -12,7 +12,11 @@ import os
 import re
 import tempfile
 import argparse
+import logging
 from datetime import datetime
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 try:
     from parakeet_mlx import from_pretrained
@@ -35,19 +39,39 @@ class TranscriptionResponse(BaseModel):
 def load_model(model_id: Optional[str] = None):
     global model
     if model is None and from_pretrained:
-        model_id = model_id or os.getenv("PARAKEET_MODEL", DEFAULT_MODEL)
-        if "/" in model_id and not os.path.exists(model_id) and snapshot_download:
-            try:
-                cache_dir = snapshot_download(repo_id=model_id, repo_type="model", local_files_only=True)
-            except Exception:
-                cache_dir = snapshot_download(repo_id=model_id, repo_type="model", local_files_only=False)
-            model_id = cache_dir
-        model = from_pretrained(model_id)
+        try:
+            model_id = model_id or os.getenv("PARAKEET_MODEL", DEFAULT_MODEL)
+            logger.info(f"Loading model: {model_id}")
+            if "/" in model_id and not os.path.exists(model_id) and snapshot_download:
+                try:
+                    logger.info(f"Downloading model from HuggingFace (local only)...")
+                    cache_dir = snapshot_download(repo_id=model_id, repo_type="model", local_files_only=True)
+                    model_id = cache_dir
+                except Exception as e:
+                    logger.warning(f"Local download failed: {e}, trying with network access...")
+                    cache_dir = snapshot_download(repo_id=model_id, repo_type="model", local_files_only=False)
+                    model_id = cache_dir
+            logger.info(f"Loading model from: {model_id}")
+            model = from_pretrained(model_id)
+            logger.info("Model loaded successfully!")
+        except Exception as e:
+            logger.error(f"Failed to load model: {e}", exc_info=True)
+            model = None
+            raise
+    elif model is None:
+        logger.error("parakeet_mlx.from_pretrained is not available. Please install parakeet-mlx.")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     if from_pretrained:
-        load_model()
+        try:
+            load_model()
+            if model is None:
+                logger.error("Model failed to load during startup!")
+        except Exception as e:
+            logger.error(f"Error during model loading in lifespan: {e}", exc_info=True)
+    else:
+        logger.error("parakeet_mlx is not available. Please install parakeet-mlx package.")
     yield
 
 app = FastAPI(lifespan=lifespan)
