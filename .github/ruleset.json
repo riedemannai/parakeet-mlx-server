@@ -1,0 +1,80 @@
+{
+  "name": "Main Branch Protection - Owner Only",
+  "target": "branch",
+  "enforcement": "active",
+  "bypass_actors": [
+    {
+      "actor_id": 0,
+      "actor_type": "RepositoryRole",
+      "repository_role": "OWNER"
+    }
+  ],
+  "conditions": {
+    "ref_name": {
+      "include": [
+        "refs/heads/main",
+        "refs/heads/master"
+      ],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 2,
+        "dismiss_stale_reviews_on_push": true,
+        "require_code_owner_review": true,
+        "require_last_push_approval": true,
+        "required_review_thread_resolution": true
+      }
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "required_status_checks": [
+          {
+            "context": "CI / test (3.10)",
+            "integration_id": null
+          },
+          {
+            "context": "CI / test (3.11)",
+            "integration_id": null
+          },
+          {
+            "context": "CI / test (3.12)",
+            "integration_id": null
+          },
+          {
+            "context": "Security Scan / security-scan",
+            "integration_id": null
+          },
+          {
+            "context": "Security Scan / codeql-analysis",
+            "integration_id": null
+          }
+        ],
+        "strict_required_status_checks_policy": true
+      }
+    },
+    {
+      "type": "non_fast_forward"
+    },
+    {
+      "type": "deletion"
+    },
+    {
+      "type": "required_linear_history"
+    },
+    {
+      "type": "required_signatures"
+    },
+    {
+      "type": "required_conversation_resolution",
+      "parameters": {
+        "required_conversation_resolution": true
+      }
+    }
+  ]
+}
+

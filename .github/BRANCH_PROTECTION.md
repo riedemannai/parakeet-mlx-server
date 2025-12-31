@@ -1,6 +1,8 @@
 # Branch Protection Rules
 
-This document describes the recommended branch protection rules for maximum security.
+This document describes the recommended branch protection rules for maximum security and owner-only control.
+
+**⚠️ IMPORTANT**: This configuration ensures only the repository owner can control the repository. See `.github/RULESET_CONFIG.md` for detailed setup instructions.
 
 ## Main Branch Protection
 
@@ -31,10 +33,13 @@ This document describes the recommended branch protection rules for maximum secu
    - ✅ Require linear history (prevents merge commits)
 
 6. **Include administrators**
-   - ✅ Enforce these rules for administrators
+   - ❌ **DO NOT CHECK THIS** - This ensures even administrators must follow rules
+   - ✅ **Instead**: Add yourself to bypass list if you need emergency access
 
 7. **Restrict who can push to matching branches**
    - ✅ Only allow specific teams/users to push directly
+   - ✅ **Add only**: Your GitHub username (e.g., `riedemannai`)
+   - ❌ **Do not add**: Any other users or teams
 
 8. **Allow force pushes**
    - ❌ Do not allow force pushes

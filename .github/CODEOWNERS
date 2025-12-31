@@ -1,8 +1,14 @@
 # This file defines code owners for the repository
 # See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
+# IMPORTANT: Only the repository owner can approve changes
+# All files require approval from the owner
+
 # Default owners for everything in the repo
 * @riedemannai
+
+# This ensures that ALL changes require approval from @riedemannai
+# GitHub will automatically request review from code owners
 
 # Core server code
 /parakeet_server.py @riedemannai
