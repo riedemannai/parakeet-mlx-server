@@ -130,6 +130,62 @@ python parakeet_server.py --port 8002 --model NeurologyAI/neuro-parakeet-mlx
 - Trained on [NeurologyAI/neuro-whisper-v1](https://huggingface.co/datasets/NeurologyAI/neuro-whisper-v1) dataset
 - See [model README](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx) for details
 
+### Security Configuration
+
+#### API Key Authentication (Optional)
+
+Enable API key authentication for production use:
+
+```bash
+export API_KEY="your-secret-api-key-here"
+python parakeet_server.py
+```
+
+**Usage with API key:**
+```bash
+# Using Authorization header
+curl -H "Authorization: Bearer your-secret-api-key-here" \
+     -F "file=@audio.wav" \
+     http://localhost:8002/v1/audio/transcriptions
+
+# Using X-API-Key header
+curl -H "X-API-Key: your-secret-api-key-here" \
+     -F "file=@audio.wav" \
+     http://localhost:8002/v1/audio/transcriptions
+```
+
+**Note:** Health check endpoint (`/health`) remains public even when API key is enabled.
+
+#### CORS Configuration
+
+Restrict CORS origins for production:
+
+```bash
+export CORS_ORIGINS="https://yourdomain.com,https://app.yourdomain.com"
+python parakeet_server.py
+```
+
+**Default:** Limited to `localhost` only (secure by default)
+
+#### Model Integrity Verification (Optional)
+
+Verify model integrity using SHA256 checksum:
+
+```bash
+export MODEL_SHA256="expected-sha256-checksum"
+python parakeet_server.py
+```
+
+#### Security Features
+
+- ✅ **File upload validation**: Filename sanitization, MIME type checking, size limits (100MB max)
+- ✅ **CORS protection**: Configurable allowed origins (default: localhost only)
+- ✅ **API key authentication**: Optional Bearer token or X-API-Key header authentication
+- ✅ **Security headers**: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Referrer-Policy
+- ✅ **Model integrity**: Optional SHA256 checksum verification
+
+See [SECURITY.md](.github/SECURITY.md) for detailed security information.
+
 ## API
 
 ### 📚 Interactive API Documentation

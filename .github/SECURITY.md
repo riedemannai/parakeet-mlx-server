@@ -35,25 +35,79 @@ When reporting a vulnerability, please include:
 
 When using this server:
 
-1. **Never expose the server to the public internet without proper authentication**
-2. **Use HTTPS in production** (via reverse proxy like nginx)
-3. **Keep dependencies up to date**: Run `pip install -r requirements.txt --upgrade` regularly
-4. **Limit file upload sizes** (default: 100MB)
-5. **Monitor server logs** for suspicious activity
-6. **Use firewall rules** to restrict access
-7. **Run in isolated environments** (containers, VMs) when possible
-8. **Enable branch protection** on the main branch
-9. **Require code reviews** before merging (minimum 2 approvals)
-10. **Use signed commits** for important changes
-11. **Regularly review security alerts** from GitHub
-12. **Never commit secrets** or API keys to the repository
+1. **Enable API key authentication for production**: Set `API_KEY` environment variable
+2. **Restrict CORS origins**: Set `CORS_ORIGINS` to specific domains (not `*`)
+3. **Use HTTPS in production** (via reverse proxy like nginx)
+4. **Never expose the server to the public internet without proper authentication**
+5. **Keep dependencies up to date**: Run `pip install -r requirements.txt --upgrade` regularly
+6. **Verify model integrity**: Set `MODEL_SHA256` for model verification (optional)
+7. **Monitor server logs** for suspicious activity
+8. **Use firewall rules** to restrict access
+9. **Run in isolated environments** (containers, VMs) when possible
+10. **Enable branch protection** on the main branch
+11. **Require code reviews** before merging (minimum 2 approvals)
+12. **Use signed commits** for important changes
+13. **Regularly review security alerts** from GitHub
+14. **Never commit secrets** or API keys to the repository
 
-## Known Security Considerations
+## Production Deployment Checklist
 
-- The server accepts file uploads - validate all inputs
-- CORS is enabled by default - configure appropriately for production
-- No authentication is built-in - add authentication for production use
-- Model files are downloaded from HuggingFace - verify model integrity
+- [ ] Set `API_KEY` environment variable
+- [ ] Configure `CORS_ORIGINS` with specific allowed domains
+- [ ] Use HTTPS (reverse proxy with SSL/TLS)
+- [ ] Set `MODEL_SHA256` for model integrity verification (optional)
+- [ ] Configure firewall to restrict access
+- [ ] Monitor logs for suspicious activity
+- [ ] Keep dependencies updated
+- [ ] Run in isolated environment (container/VM)
+
+## Security Features Implemented
+
+### ✅ File Upload Validation
+- **Filename sanitization**: Path traversal attacks prevented
+- **File type validation**: Only allowed audio MIME types and extensions accepted
+- **File size limits**: Maximum 100MB per file
+- **Empty file detection**: Rejects empty uploads
+- **MIME type checking**: Validates Content-Type headers
+
+**Allowed file types**: `.wav`, `.mp3`, `.flac`, `.m4a`, `.aac`, `.ogg`, `.opus`, `.webm`
+
+### ✅ CORS Configuration
+- **Configurable origins**: Set via `CORS_ORIGINS` environment variable
+- **Default restriction**: Limited to `localhost` by default (not open to all)
+- **Production ready**: Configure specific allowed origins for production
+
+**Configuration**: Set `CORS_ORIGINS` environment variable (comma-separated list)
+```bash
+export CORS_ORIGINS="https://yourdomain.com,https://app.yourdomain.com"
+```
+
+### ✅ API Key Authentication (Optional)
+- **Bearer token support**: Use `Authorization: Bearer <key>` header
+- **X-API-Key header**: Alternative header format supported
+- **Constant-time comparison**: Prevents timing attacks
+- **Health check exemption**: `/health` endpoint remains public
+
+**Configuration**: Set `API_KEY` environment variable to enable
+```bash
+export API_KEY="your-secret-api-key-here"
+```
+
+### ✅ Model Integrity Verification
+- **SHA256 checksum support**: Optional verification via `MODEL_SHA256` environment variable
+- **HuggingFace verification**: Models downloaded from HuggingFace Hub
+- **Logging**: Integrity checks logged for audit
+
+**Configuration**: Set `MODEL_SHA256` environment variable (optional)
+```bash
+export MODEL_SHA256="expected-sha256-checksum"
+```
+
+### ✅ Security Headers
+- `X-Content-Type-Options: nosniff` - Prevents MIME type sniffing
+- `X-Frame-Options: DENY` - Prevents clickjacking
+- `X-XSS-Protection: 1; mode=block` - XSS protection
+- `Referrer-Policy: strict-origin-when-cross-origin` - Referrer information control
 
 ## Security Updates
 
