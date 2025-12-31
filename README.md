@@ -1,4 +1,4 @@
-# Neuro-Parakeet MLX Server
+# 🦜🧠 Neuro-Parakeet MLX Server
 
 **OpenAI-Compatible FastAPI Server for Audio Transcription with Parakeet-MLX**
 
