@@ -141,6 +141,11 @@ def extract_segments(r):
             segments.append(seg_dict)
     return segments if segments else None
 
+@app.options("/v1/audio/transcriptions")
+async def options_transcription():
+    """Handle CORS preflight requests."""
+    return {"status": "ok"}
+
 @app.post("/v1/audio/transcriptions", response_model=TranscriptionResponse)
 async def create_transcription(file: UploadFile = File(...), model_name: str = Form("parakeet-tdt-0.6b-v3", alias="model"),
                                response_format: Optional[str] = Form("json"),

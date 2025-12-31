@@ -204,13 +204,18 @@
                 formData.append('response_format', 'json');
                 formData.append('recording_timestamp', recordingTimestamp);
 
-                const response = await fetch('/v1/audio/transcriptions', {
+                // Use absolute URL based on current origin
+                const apiUrl = `${window.location.origin}/v1/audio/transcriptions`;
+                
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     body: formData
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Server-Fehler: ${response.status}`);
+                    const errorText = await response.text();
+                    console.error('Server error:', response.status, errorText);
+                    throw new Error(`Server-Fehler: ${response.status} - ${errorText.substring(0, 100)}`);
                 }
 
                 const data = await response.json();
