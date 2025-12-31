@@ -3,11 +3,17 @@
 
 PORT=${PORT:-8002}
 MODEL=${PARAKEET_MODEL:-NeurologyAI/neuro-parakeet-mlx}
+API_KEY=${API_KEY:-""}
 CONDA_ENV_NAME="neuro-parakeet-mlx-server"
 
 echo "Starting Neuro-Parakeet MLX Server..."
 echo "  Port: $PORT"
 echo "  Model: $MODEL"
+if [ -n "$API_KEY" ]; then
+    echo "  API Key: ENABLED"
+else
+    echo "  API Key: DISABLED (set API_KEY environment variable to enable)"
+fi
 echo ""
 
 # Activate conda environment if available
@@ -41,5 +47,8 @@ else
 fi
 
 export PARAKEET_MODEL="$MODEL"
+if [ -n "$API_KEY" ]; then
+    export API_KEY="$API_KEY"
+fi
 python parakeet_server.py --port "$PORT" --model "$MODEL"
 
