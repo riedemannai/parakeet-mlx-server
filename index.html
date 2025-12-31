@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuro-Parakeet MLX Server - Transcription</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #000000; }
+        @keyframes recording-pulse {
+            0%, 100% { 
+                opacity: 0.75;
+                transform: translate3d(-50%, -50%, 0) scale3d(1, 1, 1);
+            }
+            50% { 
+                opacity: 1;
+                transform: translate3d(-50%, -50%, 0) scale3d(1.08, 1.08, 1);
+            }
+        }
+        .recording-indicator {
+            animation: recording-pulse 1.8s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+            will-change: transform, opacity;
+            transform-origin: 50% 50%;
+            backface-visibility: hidden;
+            perspective: 1000px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            shape-rendering: geometricPrecision;
+            contain: layout style paint;
+            isolation: isolate;
+            filter: blur(0);
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+        .recording-indicator circle {
+            shape-rendering: geometricPrecision;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            paint-order: stroke fill;
+        }
+        #recordBtn {
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #recordBtn:hover:not(:active) {
+            transform: scale(0.95);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        #recordBtn:active {
+            transform: scale(0.92);
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-3xl">
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800">
+            <div class="mb-6 text-center">
+                <h1 class="text-2xl font-semibold text-white mb-2">Neuro-Parakeet MLX Server</h1>
+                <p class="text-gray-400 text-sm">OpenAI-Compatible Audio Transcription</p>
+            </div>
+            <div class="space-y-8">
+                <!-- Record Button -->
+                <div class="flex flex-col items-center gap-4">
+                    <div class="relative inline-flex items-center justify-center">
+                        <svg id="recordingIndicator" class="hidden absolute top-1/2 left-1/2 w-20 h-20 recording-indicator" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" style="overflow: visible; pointer-events: none;" preserveAspectRatio="xMidYMid meet">
+                            <circle cx="40" cy="40" r="38" fill="none" stroke="white" stroke-width="2" vector-effect="non-scaling-stroke"/>
+                        </svg>
+                        <button id="recordBtn" class="relative bg-white hover:bg-gray-50 text-black w-20 h-20 rounded-full shadow-xl flex items-center justify-center">
+                            <svg id="micIcon" class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                            </svg>
+                            <svg id="stopIcon" class="w-10 h-10 hidden" fill="currentColor" viewBox="0 0 24 24">
+                                <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-gray-400 text-sm mb-2">or</p>
+                        <label for="fileInput" class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors border border-gray-700">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            Upload Audio File
+                        </label>
+                        <input type="file" id="fileInput" accept="audio/*" class="hidden">
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div id="status" class="hidden text-center">
+                    <div class="inline-flex items-center gap-2 text-gray-400">
+                        <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Result -->
+                <div id="result" class="hidden">
+                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 relative">
+                        <div class="absolute top-6 right-6 flex gap-2">
+                            <button id="clearBtn" class="text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-gray-700 flex items-center justify-center" title="Clear all">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                            <button id="copyBtn" class="text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-gray-700 flex items-center justify-center" title="Copy text">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <p id="transcription" class="text-gray-200 leading-relaxed whitespace-pre-wrap pr-20"></p>
+                    </div>
+                </div>
+
+                <!-- Error -->
+                <div id="error" class="hidden bg-gray-800 border border-gray-700 rounded-xl p-4">
+                    <p id="errorText" class="text-gray-300"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const recordBtn = document.getElementById('recordBtn');
+        const recordingIndicator = document.getElementById('recordingIndicator');
+        const micIcon = document.getElementById('micIcon');
+        const stopIcon = document.getElementById('stopIcon');
+        const status = document.getElementById('status');
+        const result = document.getElementById('result');
+        const transcription = document.getElementById('transcription');
+        const error = document.getElementById('error');
+        const errorText = document.getElementById('errorText');
+        const copyBtn = document.getElementById('copyBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const fileInput = document.getElementById('fileInput');
+
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let sentences = []; // Array to store all sentences with timestamps
+        let sessionStartTime = null; // Time when first recording of session started
+
+        // File upload handler
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const timestamp = new Date().toISOString();
+                if (sessionStartTime === null) {
+                    sessionStartTime = timestamp;
+                }
+                await transcribeAudio(file, file.name, timestamp);
+                fileInput.value = ''; // Reset input
+            }
+        });
+
+        // Recording
+        recordBtn.addEventListener('click', async () => {
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    // Track recording start time
+                    const recordingStartTime = new Date().toISOString();
+                    if (sessionStartTime === null) {
+                        sessionStartTime = recordingStartTime;
+                    }
+
+                    mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        stream.getTracks().forEach(track => track.stop());
+                        await transcribeAudio(audioBlob, 'recording.wav', recordingStartTime);
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    micIcon.classList.add('hidden');
+                    stopIcon.classList.remove('hidden');
+                    recordingIndicator.classList.remove('hidden');
+                    recordBtn.classList.remove('bg-white', 'hover:bg-gray-50', 'text-black');
+                    recordBtn.classList.add('bg-gray-600', 'hover:bg-gray-500', 'text-white');
+                } catch (err) {
+                    showError('Microphone access denied. Please allow microphone access in your browser settings.');
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                stopIcon.classList.add('hidden');
+                micIcon.classList.remove('hidden');
+                recordingIndicator.classList.add('hidden');
+                recordBtn.classList.remove('bg-gray-600', 'hover:bg-gray-500', 'text-white');
+                recordBtn.classList.add('bg-white', 'hover:bg-gray-50', 'text-black');
+            }
+        });
+
+        async function transcribeAudio(file, filename, recordingTimestamp) {
+            try {
+                hideAll();
+                showStatus();
+
+                const formData = new FormData();
+                formData.append('file', file, filename);
+                formData.append('model', 'parakeet-tdt-0.6b-v3');
+                formData.append('response_format', 'json');
+                formData.append('recording_timestamp', recordingTimestamp);
+
+                const response = await fetch('/v1/audio/transcriptions', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server-Fehler: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Calculate relative time from session start
+                const recordingTime = new Date(recordingTimestamp);
+                const sessionTime = new Date(sessionStartTime);
+                const relativeTime = (recordingTime - sessionTime) / 1000; // seconds
+                
+                // Add sentence to array
+                sentences.push({
+                    text: data.text,
+                    timestamp: recordingTimestamp,
+                    relativeTime: relativeTime,
+                    segments: data.segments || null
+                });
+                
+                updateTranscriptionDisplay();
+            } catch (err) {
+                const errorMsg = err.message || 'Transcription error';
+                console.error('Transcription error:', err);
+                showError(errorMsg);
+            }
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function formatDate(date) {
+            const d = new Date(date);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        function formatSystemTime(date) {
+            const d = new Date(date);
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            const seconds = String(d.getSeconds()).padStart(2, '0');
+            return `${hours}:${minutes}:${seconds}`;
+        }
+        
+        function updateTranscriptionDisplay() {
+            if (sentences.length === 0) {
+                result.classList.add('hidden');
+                return;
+            }
+            
+            // Build display text with timestamps
+            let displayText = '';
+            
+            // Add date header at the beginning
+            if (sentences.length > 0 && sessionStartTime) {
+                const dateStr = formatDate(sessionStartTime);
+                displayText += `Date: ${dateStr}\n\n`;
+            }
+            
+            sentences.forEach((sentence, index) => {
+                const relativeTimeStr = formatTime(sentence.relativeTime);
+                const systemTimeStr = formatSystemTime(sentence.timestamp);
+                displayText += `[${systemTimeStr}] (+${relativeTimeStr}) ${sentence.text}\n`;
+            });
+            
+            transcription.textContent = displayText.trim();
+            result.classList.remove('hidden');
+        }
+
+        function showStatus(text) {
+            status.classList.remove('hidden');
+            result.classList.add('hidden');
+            error.classList.add('hidden');
+        }
+
+        function showResult(text) {
+            // This function is kept for compatibility but updateTranscriptionDisplay is used instead
+            updateTranscriptionDisplay();
+            status.classList.add('hidden');
+            error.classList.add('hidden');
+        }
+
+        function showError(message) {
+            errorText.textContent = message;
+            status.classList.add('hidden');
+            result.classList.add('hidden');
+            error.classList.remove('hidden');
+        }
+
+        function hideAll() {
+            status.classList.add('hidden');
+            result.classList.add('hidden');
+            error.classList.add('hidden');
+        }
+
+        copyBtn.addEventListener('click', () => {
+            // Copy text without timestamps for cleaner output
+            const textOnly = sentences.map(s => s.text).join(' ');
+            navigator.clipboard.writeText(textOnly);
+            const svg = copyBtn.querySelector('svg');
+            copyBtn.innerHTML = `
+                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            `;
+            setTimeout(() => {
+                copyBtn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                `;
+            }, 2000);
+        });
+        
+        clearBtn.addEventListener('click', () => {
+            sentences = [];
+            sessionStartTime = null;
+            updateTranscriptionDisplay();
+        });
+    </script>
+</body>
+</html>
