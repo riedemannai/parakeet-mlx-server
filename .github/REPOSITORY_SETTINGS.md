@@ -4,7 +4,23 @@ This document specifies the recommended GitHub repository settings.
 
 ## Repository Description
 
-**No description** (leave empty)
+**Recommended Description:**
+
+```
+OpenAI-compatible FastAPI server for German neurology and neuro-oncology audio transcription using Parakeet-MLX. Optimized for Apple Silicon M4.
+```
+
+**Alternative Shorter Version:**
+
+```
+OpenAI-compatible FastAPI server for German neurology/neuro-oncology transcription with Parakeet-MLX on Apple Silicon M4
+```
+
+**Alternative Detailed Version:**
+
+```
+OpenAI-compatible FastAPI server for audio transcription optimized for German neurology and neuro-oncology terminology. Uses Parakeet-MLX models on Apple Silicon (optimized for M4).
+```
 
 ## Topics/Tags
 
