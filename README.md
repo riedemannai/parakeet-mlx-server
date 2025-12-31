@@ -11,20 +11,20 @@
 [![Model](https://img.shields.io/badge/Model-NeurologyAI%2Fneuro--parakeet--mlx-blue)](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx)
 [![Dataset](https://img.shields.io/badge/Dataset-NeurologyAI%2Fneuro--whisper--v1-green)](https://huggingface.co/datasets/NeurologyAI/neuro-whisper-v1)
 
-> 🍎 **Apple Silicon Only** | 🧠 **Neurology & Neuro-Oncology Speech Recognition** | 🚀 **OpenAI-Compatible API**
+> 🍎 **Optimized for Apple Silicon (M4)** | 🧠 **Neurology & Neuro-Oncology Speech Recognition** | 🚀 **OpenAI-Compatible API**
 
 ---
 
 ## About Neuro-Parakeet MLX Server
 
-Neuro-Parakeet MLX Server is an OpenAI-compatible FastAPI server for audio transcription using Parakeet-MLX models. The server is specifically optimized for Apple Silicon (MLX) and provides a fully compatible API to OpenAI's Whisper API.
+Neuro-Parakeet MLX Server is an OpenAI-compatible FastAPI server for audio transcription using Parakeet-MLX models. The server is optimized for Apple Silicon M4 (MLX) and provides a fully compatible API to OpenAI's Whisper API.
 
 This server is designed to work with the [NeurologyAI/neuro-parakeet-mlx](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx) model, a fine-tuned Parakeet TDT 0.6B model optimized for German neurology and neuro-oncology terminology.
 
 ## Features
 
 * 🚀 **OpenAI-Compatible API** - Direct drop-in replacement for OpenAI Whisper API
-* 🍎 **Apple Silicon Optimized** - Uses MLX for optimal performance on Mac (M1/M2/M3/M4)
+* 🍎 **Apple Silicon Optimized** - Optimized for M4, compatible with M1/M2/M3/M4
 * 📝 **Automatic Transcription** - Supports various audio formats (WAV, MP3, FLAC, M4A, etc.)
 * 🧠 **Neurology & Neuro-Oncology Specialized** - Optimized for German neurology and neuro-oncology terminology
 * 🌍 **Multilingual** - Supports multiple languages (optimized for German)
@@ -37,8 +37,9 @@ This server is designed to work with the [NeurologyAI/neuro-parakeet-mlx](https:
 
 ### Prerequisites
 
-* **Apple Silicon Mac (M1/M2/M3/M4) - REQUIRED**
+* **Apple Silicon Mac (optimized for M4, compatible with M1/M2/M3) - REQUIRED**
   * This server uses MLX (Apple's machine learning framework) which only works on Apple Silicon
+  * **Optimized for M4, compatible with M1/M2/M3**
   * **Does NOT work on Linux, Windows, or Intel Macs**
 * Python 3.10 or higher
 * pip, uv, or conda
