@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved conda environment detection in start script
 - Better error messages for unsupported platforms (Linux/Windows)
 
-## [0.1.0] - 2024-01-XX
+## [0.1.0] - 2024-12-XX
 
 ### Added
 - Initial release

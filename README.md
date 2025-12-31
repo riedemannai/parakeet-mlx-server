@@ -6,6 +6,7 @@
 [![Security Scan](https://github.com/riedemannai/parakeet-mlx-server/actions/workflows/security.yml/badge.svg)](https://github.com/riedemannai/parakeet-mlx-server/actions/workflows/security.yml)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+[![Latest Release](https://img.shields.io/github/v/release/riedemannai/parakeet-mlx-server)](https://github.com/riedemannai/parakeet-mlx-server/releases)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Model](https://img.shields.io/badge/Model-NeurologyAI%2Fneuro--parakeet--mlx-blue)](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx)
 [![Dataset](https://img.shields.io/badge/Dataset-NeurologyAI%2Fneuro--whisper--v1-green)](https://huggingface.co/datasets/NeurologyAI/neuro-whisper-v1)
