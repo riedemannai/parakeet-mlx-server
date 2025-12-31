@@ -4,37 +4,76 @@ __pycache__/
 *$py.class
 *.so
 .Python
-.venv/
-venv/
-ENV/
-env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# IDE
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+conda-env/
+
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
-# OS
 .DS_Store
-Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+*.cover
+
+# Environment variables
+.env
+.env.local
 
 # Logs
 *.log
-server.log
+logs/
 
-# Model files (zu groß für Git)
+# Temporary files
+*.tmp
+*.temp
+test_audio*.wav
+output*.wav
+
+# Model files (if large)
 *.safetensors
 *.bin
 *.pt
 *.pth
 models/
-.cache/
 
-# Temporary files
-*.tmp
-*.temp
-*.wav
-*.mp3
-*.flac
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Server files
+server.log
