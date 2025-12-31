@@ -1,4 +1,4 @@
-# Parakeet MLX Server
+# Neuro-Parakeet MLX Server
 
 **OpenAI-Compatible FastAPI Server for Audio Transcription with Parakeet-MLX**
 
@@ -8,9 +8,9 @@
 
 ---
 
-## About Parakeet MLX Server
+## About Neuro-Parakeet MLX Server
 
-Parakeet MLX Server is an OpenAI-compatible FastAPI server for audio transcription using Parakeet-MLX models. The server is specifically optimized for Apple Silicon (MLX) and provides a fully compatible API to OpenAI's Whisper API.
+Neuro-Parakeet MLX Server is an OpenAI-compatible FastAPI server for audio transcription using Parakeet-MLX models. The server is specifically optimized for Apple Silicon (MLX) and provides a fully compatible API to OpenAI's Whisper API.
 
 This server is designed to work with the [NeurologyAI/neuro-parakeet-mlx](https://huggingface.co/NeurologyAI/neuro-parakeet-mlx) model, a fine-tuned Parakeet TDT 0.6B model optimized for German medical/neurological speech recognition.
 
@@ -38,10 +38,10 @@ We recommend using a conda environment to manage dependencies and avoid conflict
 
 ```bash
 # 1. Create a new conda environment with Python 3.10+
-conda create -n parakeet-mlx-server python=3.10 -y
+conda create -n neuro-parakeet-mlx-server python=3.10 -y
 
 # 2. Activate the environment
-conda activate parakeet-mlx-server
+conda activate neuro-parakeet-mlx-server
 
 # 3. Clone repository
 git clone git@github.com:riedemannai/parakeet-mlx-server.git
@@ -56,7 +56,7 @@ pip install -r requirements.txt
 
 **Note:** Always activate the conda environment before running the server:
 ```bash
-conda activate parakeet-mlx-server
+conda activate neuro-parakeet-mlx-server
 ./start_server.sh
 ```
 

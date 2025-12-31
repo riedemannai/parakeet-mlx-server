@@ -1,2 +1,2 @@
-# Tests for parakeet-mlx-server
+# Tests for neuro-parakeet-mlx-server
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Example Python client for parakeet-mlx-server."""
+"""Example Python client for neuro-parakeet-mlx-server."""
 
 import openai
 from pathlib import Path
@@ -7,7 +7,7 @@ from pathlib import Path
 
 def transcribe_audio(audio_path: str, server_url: str = "http://localhost:8002") -> str:
     """
-    Transcribe an audio file using the parakeet-mlx-server.
+    Transcribe an audio file using the neuro-parakeet-mlx-server.
     
     Args:
         audio_path: Path to the audio file

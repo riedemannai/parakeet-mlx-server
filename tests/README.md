@@ -1,6 +1,6 @@
 # Tests
 
-This directory contains unit tests for the parakeet-mlx-server.
+This directory contains unit tests for the neuro-parakeet-mlx-server.
 
 ## Running Tests
 

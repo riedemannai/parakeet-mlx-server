@@ -1,10 +1,10 @@
 #!/bin/bash
-# Start Parakeet MLX Server
+# Start Neuro-Parakeet MLX Server
 
 PORT=${PORT:-8002}
 MODEL=${PARAKEET_MODEL:-mlx-community/parakeet-tdt-0.6b-v3}
 
-echo "Starting Parakeet MLX Server..."
+echo "Starting Neuro-Parakeet MLX Server..."
 echo "  Port: $PORT"
 echo "  Model: $MODEL"
 echo ""

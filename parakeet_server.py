@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""German audio transcription server using parakeet-mlx."""
+"""Neuro-Parakeet MLX Server - German audio transcription server using parakeet-mlx."""
 
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware

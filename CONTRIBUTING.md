@@ -1,4 +1,4 @@
-# Contributing to Parakeet MLX Server
+# Contributing to Neuro-Parakeet MLX Server
 
 Thank you for your interest in contributing! This document provides guidelines and instructions for contributing to the project.
 
@@ -12,8 +12,8 @@ Thank you for your interest in contributing! This document provides guidelines a
    ```
 3. **Set up development environment**:
    ```bash
-   conda create -n parakeet-mlx-server-dev python=3.10 -y
-   conda activate parakeet-mlx-server-dev
+   conda create -n neuro-parakeet-mlx-server-dev python=3.10 -y
+   conda activate neuro-parakeet-mlx-server-dev
    pip install -r requirements.txt
    pip install -r requirements-dev.txt
    ```

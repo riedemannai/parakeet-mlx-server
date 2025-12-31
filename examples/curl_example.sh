@@ -1,5 +1,5 @@
 #!/bin/bash
-# Example curl commands for parakeet-mlx-server
+# Example curl commands for neuro-parakeet-mlx-server
 
 SERVER_URL="http://localhost:8002"
 AUDIO_FILE="test_audio.wav"
