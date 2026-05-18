@@ -3,4 +3,4 @@ uvicorn[standard]>=0.40.0
 parakeet-mlx>=0.4.1
 huggingface-hub>=1.2.3
 pydantic>=2.12.5
-python-multipart>=0.0.21
+python-multipart>=0.0.29
